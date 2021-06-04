@@ -1,0 +1,94 @@
+<section class="text-card">
+    <div class="content" style="width: 1250px;">
+        <i class="fa fa-universal-access header-icon" aria-hidden="true"></i>
+        <h4 class="page-header">Resource Center</h4>
+        <div class="col-md-6" style="float: right;">
+            <button type="button" class="btn btn-primary create-color special btngrid upload">Upload Video</button>
+            <input type="text" class="form-control searchgrid" pInputText size="20" placeholder="Search.."
+            (input)="tab1.filterGlobal($event.target.value, 'contains')" />
+        </div>
+<div class="col-md-12 row v-align">
+    <div class="col-md-12 card-section file-section v-card file-card">
+        <div class="card-body file-body">
+            <div class="col-md-2" style="border-right: 1px solid #d4d4d4; padding: 0px;">
+              <table>
+                <thead>
+                <tr class="fdata">
+                    <th>Home</th>
+                </tr>
+              </thead>
+            </table>
+               <div class="list-group">
+        <div *ngFor="let m of  mmenu" class="nested-menu">
+            <a class="list-group-item file-item" (click)="addExpandClass(m.menuItems)">
+                <i class="fa fa-folder"></i>&nbsp;
+                <span>{{m.menuItems}}</span>
+            </a>
+            <li *ngFor="let ms of  m.subMenus" class="nested" [class.expand]="menu1 === m.menuItems">
+                <ul class="submenu">
+                    <li>
+                        <a>
+                            <!-- <i class="fa fa-user"></i> &nbsp; -->
+                            <span>{{ms.menuName}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+    </div>
+        </div>
+            <div class="col-md-10" style="padding: 0px;">
+              <table>
+                  <thead>
+                  <tr class="fhead">
+                      <th>First Name</th>
+                      <th>Last Modified By</th>
+                      <th>Last Modified Time</th>
+                      <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of documentList" class="fhead">
+                      <td>{{data.FirstName}}</td>
+                      <td>{{data.LastModifiedBy}}</td>
+                      <td>{{data.LastModifiedTime}}</td>
+                      <td>
+                          <i class="fa fa-thumbs-o-up plusMinus plusColor filegridbtn" data-toggle="tooltip" title="Create User"></i>
+                          <i class="fa fa-thumbs-o-down plusMinus minusColor filegridbtn" data-toggle="tooltip" title="Create User"></i>
+                      </td>
+                  </tr>
+            </tbody>
+              </table>
+              </div>
+        </div>
+      </div>
+   </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+<!-- header and nested list -->
+            <!-- <table>
+                <thead>
+                <tr class="fdata">
+                    <th>Home</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="fdata">
+                    <td>Users</td>
+                </tr>
+                <tr class="fdata">
+                  <td>Programs</td>
+              </tr>
+          </tbody>
+            </table> -->
+            <!-- <li class="lilist" *ngFor="let item of data">
+              <app-filelist [title]="item.title" [children]="item.children"></app-filelist>
+           </li> -->

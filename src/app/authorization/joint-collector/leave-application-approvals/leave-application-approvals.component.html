@@ -1,0 +1,57 @@
+<section class="text-card">
+  <div class="content">
+      <p-table #tab1 [columns]="companyHeaders" [value]="companyList" sortMode="multiple" [paginator]="true"
+          [rows]="pageRecordSize" id="quoteTable" [rowsPerPageOptions]="pageOptions" (onPage)="onPage($event)"
+          [style]="{'width': '100%'}" [(selection)]="selectedData" [scrollable]="true">
+          <ng-template pTemplate="caption">
+              <div class="col-md-12 row head-align">
+                  <div class="col-md-6">
+                      <h6 class="page-header"><i class="fa fa-user head-icon" aria-hidden="true"></i>Leave Application Approvals</h6>
+                  </div>
+                  <div class="col-md-6 crud-button-align">
+                      <button [disabled] = "selectedData.length < 1 || this.selectedData[0].status != 'Pending'" value="Approved" type="button" (click)="onempApprovals($event.target.value)" class="btn btn-primary create-color special btngrid">Approve</button>
+                      <button [disabled] = "selectedData.length < 1 || this.selectedData[0].status != 'Pending'"  value="Rejected" type="button" (click)="onempApprovals($event.target.value)" class="btn btn-primary delete-color special btngrid">Reject</button>
+                      <input type="text" class="form-control searchgrid" pInputText size="20" placeholder="Search.."
+                      (input)="tab1.filterGlobal($event.target.value, 'contains')" />
+                  </div>
+              </div>
+            </ng-template>
+          <ng-template pTemplate="header" let-columns>
+              <tr>
+                  <th style="width: 3em">
+                      <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                  </th>
+                  <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                      {{col.header}}
+                      <p-sortIcon [field]="col.field"></p-sortIcon>
+                  </th>
+                  <!-- <th style="width: 11em;">Actions</th> -->
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                  <td style="width: 3em">
+                      <p-tableCheckbox [value]="rowData" [disabled]="rowData['status'] == 'Approved' || rowData['status'] == 'Rejected'"></p-tableCheckbox>
+                  </td>
+                  <td *ngFor="let col of columns" [style.width]="col.width">
+                      <span>
+                          {{rowData[col.field]}}
+                      </span>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                  <td [attr.colspan]="5" style="text-align:center;">
+                      No Records Found.
+                  </td>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft">
+              <div class="display-flex" *ngIf="companyList?.length > 0">
+                  <grid-pagination-info [totalRecords]="companyList.length" [pageData]="paginatoryDetails">
+                  </grid-pagination-info>
+              </div>
+          </ng-template>
+      </p-table>
+  </div>
+</section>

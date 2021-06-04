@@ -1,0 +1,103 @@
+<section class="text-card">
+    <div class="content">
+        <p-table #tab1 [columns]="pposHeaders" [value]="tableData" sortMode="multiple" [paginator]="true"
+            [rows]="pageRecordSize" id="quoteTable" [rowsPerPageOptions]="pageOptions" (onPage)="onPage($event)"
+            [style]="{'width': '100%'}" [(selection)]="selectedData" [scrollable]="true">
+            <ng-template pTemplate="caption">
+                <div class="searchPanel row">
+                    <div class="col-4">
+                        <h6 class="author-name"><i class="fa fa-user-circle"></i> Users</h6>
+                    </div>
+                    <div class="col-4 table-crud-icons">
+                        <i class="fa fa-trash" data-toggle="tooltip" title="Delete User" (click)="onDeleteUser()"></i>
+                        <i class="fa fa-pencil" data-toggle="tooltip" title="Edit User" (click)="onEditUser()"></i>
+                        <i class="fa fa-plus" data-toggle="tooltip" title="Create User" (click)="onCreateUser(userTemplate)"></i>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control" pInputText size="50" placeholder="Search.."
+                        (input)="tab1.filterGlobal($event.target.value, 'contains')" />
+                    </div>
+                
+                 
+                </div>
+              </ng-template>
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th style="width: 3em">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                        {{col.header}}
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                    <th style="width: 11em">Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData">
+                    <td style="width: 3em">
+                        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                    </td>
+                    <td *ngFor="let col of columns" [style.width]="col.width">
+                        <span>
+                            {{rowData[col.field]}}
+                        </span>
+                    <td style="width: 11em">
+                        <span class="crud-icons actionIcons">
+                            <i class="fa fa-eye view" aria-hidden="true" 
+                                data-toggle="tooltip" title="View Details"></i>
+                            <i class="fa fa-commenting-o comment" aria-hidden="true"
+                                 data-toggle="tooltip" title="Comments"></i>
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                    <td [attr.colspan]="5" style="text-align:center;">
+                        No Records Found.
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="paginatorleft">
+                <div style="display: flex;" *ngIf="tableData?.length > 0">
+                    <grid-pagination-info [totalRecords]="tableData.length" [pageData]="paginatoryDetails">
+                    </grid-pagination-info>
+                </div>
+            </ng-template>
+        </p-table>
+    </div>
+</section>
+<!-- Just Copy The Code Above -->
+
+<!-- For Modal -->
+<ng-template #userTemplate>
+<div class="modal-header">
+    <h6>User</h6>
+    <button type="button" class="close close-style" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form name="userForm" #userForm="ngForm" (submit)="onSaveUserDetails()">
+        <div class="form-group">
+            <label id="l_name">Name</label>
+            <input id="i_name" class="form-control mandatory" type="text" placeholder="Enter Name" required
+                name="user_name" [(ngModel)]="name" #user_name="ngModel"
+                 [ngClass]="{'mandatory-failed': (user_name.invalid && user_name.dirty) || (user_name.invalid && userForm.submitted), 'mandatory-success': user_name.valid && user_name.dirty}" />
+                 <validation-info [formName]="userForm" [fieldName]="user_name" [validationMessage]="'Please Enter Name'"></validation-info>
+               
+        </div>
+        <div class="form-group">
+            <label id="l_userName">Username</label>
+            <input id="i_userName" class="form-control mandatory" type="text" placeholder="Enter Username" required
+                name="user_uName" [(ngModel)]="userName" #user_uName="ngModel"
+                 [ngClass]="{'mandatory-failed': (user_uName.invalid && user_uName.dirty) || (user_uName.invalid && userForm.submitted), 'mandatory-success': user_uName.valid && user_uName.dirty}" />
+                 <validation-info [formName]="userForm" [fieldName]="user_uName" [validationMessage]="'Please Enter Username'"></validation-info>
+               
+        </div>
+
+    </form>
+</div>
+<div class="modal-footer"></div>
+</ng-template>

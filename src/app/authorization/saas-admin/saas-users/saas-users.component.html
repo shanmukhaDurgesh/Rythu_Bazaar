@@ -1,0 +1,182 @@
+<section class="text-card">
+    <div class="content">
+        <p-table #tab1 [columns]="companyHeaders" [value]="companyList" sortMode="multiple" [paginator]="true"
+            [rows]="pageRecordSize" id="quoteTable" [rowsPerPageOptions]="pageOptions" (onPage)="onPage($event)"
+            [style]="{'width': '100%'}" [(selection)]="selectedData" [scrollable]="true">
+            <ng-template pTemplate="caption">
+                <div class="col-md-12 row" style="margin: 0px 0px 10px 0px; display: flex; ">
+                    <div class="col-md-6">
+                        <h6 class="page-header"><i class="fa fa-user head-icon" aria-hidden="true"></i>Users</h6>
+                    </div>
+                    <div class="col-md-6" style="float: right;">
+                        <button type="button" class="btn btn-primary create-color special btngrid" (click)="onCreateUser(company)">Create</button>
+                        <button type="button" class="btn btn-primary delete-color special btngrid" (click)="onDeleteUser()">Delete</button>
+                        <input type="text" class="form-control searchgrid" pInputText size="20" placeholder="Search.."
+                        (input)="tab1.filterGlobal($event.target.value, 'contains')" />
+                    </div>
+                </div>
+              </ng-template>
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th style="width: 3em">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                        {{col.header}}
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                    <th style="width: 11em;">Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData">
+                    <td style="width: 3em">
+                        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                    </td>
+                    <td *ngFor="let col of columns" [style.width]="col.width">
+                        <span>
+                            {{rowData[col.field]}}
+                        </span>
+                    <td style="width: 11em">
+                        <span class="crud-icons actionIcons">
+                                 <i class="fa fa-pencil-square-o" (click)="userEdit($event, rowData, selectedData, company)" aria-hidden="true" data-toggle="tooltip" title="Edit"></i>
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                    <td [attr.colspan]="5" style="text-align:center;">
+                        No Records Found.
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="paginatorleft">
+                <div style="display: flex;" *ngIf="companyList?.length > 0">
+                    <grid-pagination-info [totalRecords]="companyList.length" [pageData]="paginatoryDetails">
+                    </grid-pagination-info>
+                </div>
+            </ng-template>
+        </p-table>
+    </div>
+</section>
+
+
+<!-- modal pop-up for companyInputs -->
+<ng-template #company>
+    <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+    <div class="modal-header">
+        <div class="col-md-12 row" style="display: flex; ">
+            <div class="">
+        <h6 class="popupHeader">Create User</h6>
+        </div>
+        <div class="" style="float: right; flex: 1;">
+            <button type="submit" class="btn btn-primary pop-up-button create-color special">Submit</button>
+            <button type="button" class="btn btn-primary delete-color special pop-up-button" (click)="closeModal()">Cancel</button>
+        </div>
+        </div>
+        <button type="button" class="close close-style" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="col-md-12 row" style="display: flex !important;">
+            <div class="col-md-6">
+            <div class="form-group">
+                <label for="name">First Name</label>
+                <input type="text" class="form-control" placeholder="Name" name="name" [(ngModel)]="companyInputs.name" #name="ngModel" [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required />
+                <div *ngIf="f.submitted && name.invalid" class="invalid-feedback">
+                    <div *ngIf="name.errors.required">Name is required</div>
+                </div>
+            </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" class="form-control" name="lastName" placeholder="LastName" [(ngModel)]="companyInputs.lastName" #lastName="ngModel" [ngClass]="{ 'is-invalid': f.submitted && lastName.invalid }" required />
+                    <div *ngIf="f.submitted && lastName.invalid" class="invalid-feedback">
+                        <div *ngIf="lastName.errors.required">Last Name is required</div>
+                    </div>
+                </div>
+        </div> 
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" class="form-control" name="email" placeholder="Email" [(ngModel)]="companyInputs.email" #email="ngModel" [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" required email />
+                <div *ngIf="f.submitted && email.invalid" class="invalid-feedback">
+                    <div *ngIf="email.errors.required">Email is required</div>
+                    <div *ngIf="email.errors.email">Email must be a valid email address</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="text" class="form-control" placeholder="Country" name="phone" [(ngModel)]="companyInputs.phone" #phone="ngModel" [ngClass]="{ 'is-invalid': f.submitted && phone.invalid }" required />
+                <div *ngIf="f.submitted && phone.invalid" class="invalid-feedback">
+                    <div *ngIf="phone.errors.required">Phone Number is required</div>
+                </div>
+            </div>
+           </div>
+        <div class="col-md-12">
+            <div class="form-group form-check">
+                <input type="checkbox" name="internal" id="internal" class="form-check-input" [(ngModel)]="companyInputs.internal" #internal="ngModel" [ngClass]="{ 'is-invalid': f.submitted && internal.invalid }">
+                <label for="internal" class="form-check-label internal-check">Internal User</label>
+                <!-- <div *ngIf="f.submitted && internal.invalid" class="invalid-feedback">Internal User is required</div> -->
+            </div>
+        </div>
+        <ng-container *ngFor="let internals of internalsList; let index=index">
+        <div class="col-md-5">
+            <div class="form-group">
+                <label for="academy">Academy</label>
+                <select class="form-control" name="academy_{{index}}" [(ngModel)]="internals.academy" 
+                 #academy_{{index}}="ngModel" required>
+                    <option [ngValue]="undefined" selected>Select</option>
+                    <option *ngFor="let academys of academyList; let j = index" [value]="academys">{{academys}}</option>
+                  </select>
+                  <!-- <div class="invalid-feedback">
+                    <div>Academy is required</div>
+                    [ngClass]="{'is-invalid':f.submitted && academy.invalid}"
+                </div> -->
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group">
+                <label for="role">Roles</label>
+                <select class="form-control" name="role_{{index}}" [(ngModel)]="internals.role" 
+                 #role_{{index}}="ngModel" required>
+                    <option [ngValue]="undefined" selected>Select</option>
+                    <option *ngFor="let roles of rolesList; let j = index" [value]="roles">{{roles}}</option>
+                  </select>
+                  <!-- <div class="invalid-feedback">
+                    <div>Role is required</div>
+                    [ngClass]="{'is-invalid':f.submitted && role.invalid}"
+                </div> -->
+            </div>   
+        </div>
+        <div class="col-md-2 plusminus-container">
+            <i #addInternalElement *ngIf="index == internalsList.length-1" class="fa fa-plus plusMinus plusColor" data-toggle="tooltip" title="Create User" (click)="addOneMoreinternals()"></i>
+            <i *ngIf="index>0" class="fa fa-minus plusMinus minusColor" data-toggle="tooltip" title="Create User" (click)="removeinternals(index)"></i>
+        </div>
+    </ng-container>
+        <!-- <div class="col-md-12" style="display: flex; padding: 0px;">
+            <div class="col-md-12 form-group">
+                <label for="addressThree">Address 3</label>
+                <div style="display: flex;">
+                <div class="col-md-10" style="padding: 0px;">
+                <input type="text" class="form-control" placeholder="Address 3" name="addressThree" [(ngModel)]="companyInputs.addressThree" #addressThree="ngModel" [ngClass]="{ 'is-invalid': f.submitted && addressThree.invalid }" />
+                <div *ngIf="f.submitted && addressThree.invalid" class="invalid-feedback">
+                    <div *ngIf="addressThree.errors.required">Address 3 is required</div>
+                </div>
+            </div>
+            <div class="col-md-2" style="padding: 0px;">
+                <i class="fa fa-plus plusMinus plusColor" data-toggle="tooltip" title="Create User"></i>
+                <i class="fa fa-minus plusMinus minusColor" data-toggle="tooltip" title="Create User"></i>
+            </div>
+        </div>
+        </div>
+        </div> -->
+            </div>
+    </div>
+</form>
+</ng-template>

@@ -1,0 +1,28 @@
+<nav class="sidebar" [ngClass]="{sidebarPushRight: isActive, collapsed: collapsed}" >
+
+  <div class="list-group">
+      <hr />
+      <div *ngFor="let m of  menuItems" class="nested-menu">
+          <a class="list-group-item"(click)="navigateToThisUrl(m)"  [routerLinkActive]="['router-link-active']"   (click)="addExpandClass(m.attr2)">
+              <i class="fa fa-folder"></i>&nbsp;
+              <span>{{m.attr2}}</span>
+          </a>
+          <ng-container  *ngFor="let ms of  m.childPermissions" >
+              <li *ngIf="ms.isMenu" class="nested" [class.expand]="selectedMenu === m.attr2">
+                  <ul class="submenu">
+                      <li>
+                          <a [routerLinkActive]="['router-link-active']" [state]= "{permissions: ms.subPermission}"  [routerLink]="[ms.attr1]"  >
+
+                              <span>{{ms.attr2}}</span>
+                          </a>
+                      </li>
+                  </ul>
+              </li>
+          </ng-container>
+      </div>
+  </div>
+
+  <div class="toggle-button" [ngClass]="{collapsed: collapsed}" (click)="toggleSideMenu()">
+      <i class="fa fa-fw fa-angle-double-{{collapsed?'right':'left'}}"></i>&nbsp;
+  </div>
+</nav>

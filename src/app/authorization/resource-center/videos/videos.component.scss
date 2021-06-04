@@ -1,0 +1,14 @@
+ul{
+    display: contents;
+}
+li{
+    list-style-type: none;
+    padding: 10px 30px;
+    color: #000;
+    font-weight: 600;
+    font-size: 13px;
+}
+li:active {
+    color: #004fff;
+    font-weight: 600;
+}

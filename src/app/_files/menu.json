@@ -1,0 +1,59 @@
+{
+"ModuleName" : "saasAdmin",
+"Module" : [
+    {
+        "Menus":[
+          {
+            "menName":"Employee Attendance",
+            "url":"/rythu-Bazaar/rythu-bazaar-employee-attendance",
+            "permissions":[
+               "VIEW",
+               "CREATE",
+               "EDIT",
+               "DELETE"
+            ]
+         },
+          {
+            "menName":"Employees",
+            "url":"/rythu-Bazaar/rythu-bazaar-employees",
+            "permissions":[
+               "VIEW",
+               "CREATE",
+               "EDIT",
+               "DELETE"
+            ]
+         },
+         {
+          "menName":"PayRoll Approvals",
+          "url":"/rythu-Bazaar/rythu-bazaar-payroll-approvals",
+          "permissions":[
+             "VIEW",
+             "CREATE",
+             "EDIT",
+             "DELETE"
+          ]
+        },
+        {
+          "menName":"Demand Orders",
+          "url":"/state-level-rbz/district-level-demand-orders",
+          "permissions":[
+             "VIEW",
+             "CREATE",
+             "EDIT",
+             "DELETE"
+          ]
+       },
+       {
+        "menName":"Leave Application",
+        "url":"/state-level-rbz/leave-application",
+        "permissions":[
+           "VIEW",
+           "CREATE",
+           "EDIT",
+           "DELETE"
+        ]
+     }
+        ]
+     }
+]
+}

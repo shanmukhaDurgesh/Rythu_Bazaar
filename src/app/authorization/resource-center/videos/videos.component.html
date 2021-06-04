@@ -1,0 +1,50 @@
+<section class="text-card">
+    <div class="content">
+        <i class="fa fa-universal-access header-icon" aria-hidden="true"></i>
+        <h4 class="page-header">Resource Center</h4>
+        <div class="col-md-6" style="float: right;">
+            <button type="button" class="btn btn-primary create-color special btngrid upload">Upload Video</button>
+            <input type="text" class="form-control searchgrid" pInputText size="20" placeholder="Search.."
+            (input)="tab1.filterGlobal($event.target.value, 'contains')" />
+        </div>
+<div class="col-md-12 row v-align">
+    <div class="col-md-12 card-section v-card">
+        <div class="card-body">
+          <div style="display:flex">
+                <ul class="col-md-12">
+                    <li><a>User</a></li>
+                    <li><a>Programs</a></li>
+                    <li><a>Members</a></li>
+                    <li><a>Prospects</a></li>
+                    <li><a>Reports</a></li>
+                </ul>
+            </div>   
+            
+            <div>
+                <div class="col-md-3" style="display: flex;">
+                  <div class="card-section">
+                    <div class="card-body">
+                      <div style="display:flex">
+                        <h4  class="card-title card-video v-content">How to create user</h4>
+                        <h4  class="card-title card-view v-lesson">lesson1</h4>
+                        </div>       
+                        <video width="290" controls>
+                            <source src="mov_bbb.mp4" type="video/mp4">
+                            <source src="mov_bbb.ogg" type="video/ogg">
+                            Your browser does not support HTML video.
+                          </video> 
+                          <div>
+                            <h4  class="card-title card-video v-content">Uploaded by admin</h4>
+                          </div>
+                          <div>
+                            <h4 class="card-title card-video v-content">On 24 Aug 2020 2:30pm EST</h4>
+                         </div>
+                    </div>
+                  </div>
+                  </div>
+            </div>
+        </div>
+      </div>
+   </div>
+  </div>
+</section>

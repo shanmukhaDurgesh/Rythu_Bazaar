@@ -1,0 +1,9 @@
+<li (click)="check=!check">
+    <div [className]="children?check?'arrow-down':'arrow-right':'arrow'"></div>
+    {{title}}
+    </li>
+   <ul *ngIf="children && check">
+   <ng-container *ngFor="let item of children">
+     <app-filelist [title]="item.title" [children]="item.children"></app-filelist>
+     </ng-container>
+   </ul>

@@ -1,0 +1,206 @@
+<section class="text-card">
+  <div class="content">
+      <p-table #tab1 [columns]="companyHeaders" [value]="companyList" sortMode="multiple" [paginator]="true"
+          [rows]="pageRecordSize" id="quoteTable" [rowsPerPageOptions]="pageOptions" (onPage)="onPage($event)"
+          [style]="{'width': '100%'}" [(selection)]="selectedData" [scrollable]="true">
+          <ng-template pTemplate="caption">
+              <div class="col-md-12 row head-align">
+                  <div class="col-md-6">
+                      <h6 class="page-header"><i class="fa fa-user head-icon" aria-hidden="true"></i>District level Demand Orders</h6>
+                  </div>
+                  <div class="col-md-6 crud-button-align">
+                      <button type="button" class="btn btn-primary create-color special btngrid" (click)="onOrderGeneration(order)">Demand Order</button>
+                      <!-- <button type="button" class="btn btn-primary delete-color special btngrid" (click)="onDeleteUser()">Delete</button> -->
+                      <input type="text" class="form-control searchgrid" pInputText size="20" placeholder="Search.."
+                      (input)="tab1.filterGlobal($event.target.value, 'contains')" />
+                  </div>
+                  <div class="col-md-12 row head-align">
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label for="month">Month</label>
+                        <select class="form-control" name="month"  #month="ngModel" [(ngModel)]="monthValue">
+                          <option [ngValue]="undefined" selected>Select To Month</option>
+                          <option *ngFor="let status of monthList; let j = index" [value]="status.id">{{status.month}}</option>
+                      </select>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label for="year">Year</label>
+                        <select class="form-control" name="year"  #year="ngModel" [(ngModel)]="yearValue">
+                          <option [ngValue]="undefined" selected>Select Year</option>
+                          <option *ngFor="let status of yearList; let j = index" [value]="status">{{status}}</option>
+                      </select>
+                      </div>
+                    </div>
+                    <div style="padding: 20px 20px 0px 20px;">
+                      <button type="submit" class="btn btn-primary pop-up-button create-color special" (click)="onAttendanceSearch()">Search</button>
+                      <button type="reset" class="btn btn-primary delete-color special pop-up-button" >Reset</button>
+                    </div>
+                  </div>
+              </div>
+            </ng-template>
+          <ng-template pTemplate="header" let-columns>
+              <tr>
+                  <th style="width: 3em">
+                      <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                  </th>
+                  <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                      {{col.header}}
+                      <p-sortIcon [field]="col.field"></p-sortIcon>
+                  </th>
+                  <!-- <th style="width: 11em;">Actions</th> -->
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                  <td style="width: 3em">
+                      <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                  </td>
+                  <td *ngFor="let col of columns" [style.width]="col.width">
+                      <span *ngIf="!col.isLink">
+                          {{rowData[col.field]}}
+                      </span>
+                      <span *ngIf="col.isLink"><a style="color: #02095d;" href="javascript:void(0);"
+                        (click)="onSelectedRbz(rowData,company)"> {{rowData[col.field]}} </a>
+                    </span>
+                  <!-- <td style="width: 11em">
+                      <span class="crud-icons actionIcons">
+                               <i class="fa fa-pencil-square-o" (click)="onPayrollGeneration($event, rowData, selectedData, company)" aria-hidden="true" data-toggle="tooltip" title="Edit"></i>
+                      </span>
+                  </td> -->
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                  <td [attr.colspan]="5" style="text-align:center;">
+                      No Records Found.
+                  </td>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft">
+              <div class="display-flex" *ngIf="companyList?.length > 0">
+                  <grid-pagination-info [totalRecords]="companyList.length" [pageData]="paginatoryDetails">
+                  </grid-pagination-info>
+              </div>
+          </ng-template>
+      </p-table>
+  </div>
+</section>
+
+
+<ng-template #company>
+  <div class="employeePop">
+  <div class="modal-header">
+      <div class="col-md-12 row" style="display: flex; ">
+      <div class="">
+      <h6 class="popupHeader">Demand Order</h6>
+      </div>
+      </div>
+      <button type="button" class="close close-style" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+      <div class="col-md-12 row" style="display: flex !important;">
+          <p-table #tab2 class="" [columns]="payRollGenHeaders" [value]="payRollGenList" sortMode="multiple" [paginator]="true"
+          [rows]="pageRecordSizeOne" id="quoteTable" [rowsPerPageOptions]="pageOptionsOne" (onPage)="onPageOne($event)"
+          [style]="{'width': '100%'}" [(selection)]="selectedDataOne" [scrollable]="true">
+          <ng-template pTemplate="header" let-columns>
+              <tr>
+                  <th style="width: 3em">
+                      <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                  </th>
+                  <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                      {{col.header}}
+                      <p-sortIcon [field]="col.field"></p-sortIcon>
+                  </th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowDataOne let-columns="columns">
+              <tr [pSelectableRow]="rowDataOne">
+                  <td style="width: 3em">
+                      <p-tableCheckbox [value]="rowDataOne"></p-tableCheckbox>
+                  </td>
+                  <td *ngFor="let col of columns" [style.width]="col.width">
+                      <span>
+                          {{rowDataOne[col.field]}}
+                      </span>
+                  </td>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                  <td [attr.colspan]="5" style="text-align:center;">
+                      No Records Found.
+                  </td>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft">
+              <div style="display: flex;" *ngIf="payRollGenList?.length > 0">
+                  <grid-pagination-info [totalRecords]="payRollGenList.length" [pageData]="paginatoryDetailsOne">
+                  </grid-pagination-info>
+              </div>
+          </ng-template>
+      </p-table>
+    </div>
+  </div>
+  </div>
+</ng-template>
+
+<ng-template #order>
+    <form class="form-size" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+      <div class="employeePop">
+        <div class="modal-header">
+            <div class="col-md-12 row" style="display: flex; ">
+            <div class="">
+            <h6 class="popupHeader">Demand Order</h6>
+            </div>
+            <div class="pop-btn-align">
+              <button type="submit" class="btn btn-primary pop-up-button create-color special">Submit</button>
+              <!-- <button type="submit" class="btn btn-primary pop-up-button view-color special">Approve</button>
+              <button type="submit" class="btn btn-primary pop-up-button delete-color special">Reject</button> -->
+            </div>
+            </div>
+            <button type="button" class="close close-style" aria-label="Close" (click)="closeModal()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+      <div class="col-md-12 row display-flex">
+      <div class="col-md-6">
+        <div class="form-group">
+            <label for="district">District</label>
+            <select disabled class="form-control" name="district" [(ngModel)]="companyInputs.district"
+            [ngClass]="{'is-invalid':f.submitted && district.invalid}" #district="ngModel" required>
+                <option [ngValue]="undefined" selected>Select</option>
+                <option *ngFor="let bazaar of districtsList; let j = index" [value]="bazaar">{{bazaar}}</option>
+              </select>
+              <div class="invalid-feedback">
+                <div>District is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+              <label for="orderAmmount">Order Amount</label>
+              <input type="text" class="form-control" placeholder="Order Ammount" name="orderAmmount" [(ngModel)]="companyInputs.orderAmmount" #orderAmmount="ngModel" [ngClass]="{ 'is-invalid': f.submitted && orderAmmount.invalid }" required />
+              <div *ngIf="f.submitted && orderAmmount.invalid" class="invalid-feedback">
+                  <div *ngIf="orderAmmount.errors.required">Order Amount is required</div>
+              </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+              <label for="rbz">Rythu Bazaar</label>
+              <input type="text" class="form-control" placeholder="Rythu Bazaar" name="rbz" [(ngModel)]="companyInputs.rbz" #rbz="ngModel" [ngClass]="{ 'is-invalid': f.submitted && rbz.invalid }" required />
+              <div *ngIf="f.submitted && rbz.invalid" class="invalid-feedback">
+                  <div *ngIf="rbz.errors.required">Rythu Bazaars is required</div>
+              </div>
+            </div>
+          </div>
+    </div>
+    </div>
+    </div>
+  </form>
+</ng-template>

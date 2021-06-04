@@ -1,0 +1,308 @@
+<section class="text-card">
+  <div class="content">
+      <p-table #tab1 [columns]="companyHeaders" [value]="companyList" sortMode="multiple" [paginator]="true"
+          [rows]="pageRecordSize" id="quoteTable" [rowsPerPageOptions]="pageOptions" (onPage)="onPage($event)"
+          [style]="{'width': '100%'}" [(selection)]="selectedData" [scrollable]="true">
+          <ng-template pTemplate="caption">
+              <div class="col-md-12 row head-align">
+                  <div class="col-md-6">
+                      <h6 class="page-header"><i class="fa fa-user head-icon" aria-hidden="true"></i>Employees</h6>
+                  </div>
+                  <div class="col-md-6 crud-button-align">
+                      <button type="button" class="btn btn-primary create-color special btngrid" (click)="onCreateUser(acdemy)">New Employee</button>
+                      <button type="button" class="btn btn-primary delete-color special btngrid" (click)="onDeleteEmp()">Delete</button>
+                      <input type="text" class="form-control searchgrid" pInputText size="20" placeholder="Search.."
+                      (input)="tab1.filterGlobal($event.target.value, 'contains')" />
+                  </div>
+              </div>
+            </ng-template>
+          <ng-template pTemplate="header" let-columns>
+              <tr>
+                  <th style="width: 3em">
+                      <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                  </th>
+                  <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                      {{col.header}}
+                      <p-sortIcon [field]="col.field"></p-sortIcon>
+                  </th>
+                  <th style="width: 11em;">Actions</th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                  <td style="width: 3em">
+                      <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                  </td>
+                  <td *ngFor="let col of columns" [style.width]="col.width">
+                      <span *ngIf="!col.isLink">
+                          {{rowData[col.field]}}
+                      </span>
+                      <span *ngIf="col.isLink"><a style="color: #02095d;" href="javascript:void(0);"
+                        (click)="onSelectedEmployee(rowData,company)"> {{rowData[col.field]}} </a>
+                    </span>
+                  <td style="width: 11em">
+                      <span class="crud-icons actionIcons">
+                               <i class="fa fa-pencil-square-o" (click)="userEdit($event, rowData, selectedData, acdemy)" aria-hidden="true" data-toggle="tooltip" title="Edit"></i>
+                      </span>
+                  </td>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                  <td [attr.colspan]="5" style="text-align:center;">
+                      No Records Found.
+                  </td>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft">
+              <div class="display-flex" *ngIf="companyList?.length > 0">
+                  <grid-pagination-info [totalRecords]="companyList.length" [pageData]="paginatoryDetails">
+                  </grid-pagination-info>
+              </div>
+          </ng-template>
+      </p-table>
+  </div>
+</section>
+
+
+<!-- modal pop-up for companyInputs -->
+<ng-template #acdemy>
+  <form class="form-size" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+  <div class="modal-header">
+      <div class="col-md-12 row display-flex">
+          <div class="">
+      <h6 class="popupHeader">Employee Registration</h6>
+      </div>
+      <div class="pop-btn-align">
+          <button type="submit" class="btn btn-primary pop-up-button create-color special">Submit</button>
+          <button type="button" class="btn btn-primary delete-color special pop-up-button" (click)="closeModal()">Cancel</button>
+      </div>
+      </div>
+      <button type="button" class="close close-style" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+      <div class="col-md-12 row display-flex">
+        <div class="col-md-6">
+          <div class="form-group">
+              <label for="district">District</label>
+              <select class="form-control" name="district" [(ngModel)]="companyInputs.district" (change)="onChangeDistrict()"
+              [ngClass]="{'is-invalid':f.submitted && district.invalid}" #district="ngModel" required>
+                  <option [ngValue]="undefined" selected>Select</option>
+                  <option *ngFor="let dist of districtList; let j = index" [value]="dist.id">{{dist.name}}</option>
+                </select>
+                <div class="invalid-feedback">
+                  <div>District is required</div>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+            <label for="rythuBazaar">Rythu Bazaar</label>
+            <select class="form-control" name="rythuBazaar" [(ngModel)]="companyInputs.rythuBazaar"
+            [ngClass]="{'is-invalid':f.submitted && rythuBazaar.invalid}" #rythuBazaar="ngModel" required>
+                <option [ngValue]="undefined" selected>Select</option>
+                <option *ngFor="let bazaar of rythuBazaarsList; let j = index" [value]="bazaar.id">{{bazaar.name}}</option>
+              </select>
+              <div class="invalid-feedback">
+                <div>Subscription is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+              <label for="name">Employee Name</label>
+              <input type="text" class="form-control" placeholder="Employee Name" name="name" [(ngModel)]="companyInputs.name" #name="ngModel" [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required />
+              <div *ngIf="f.submitted && name.invalid" class="invalid-feedback">
+                  <div *ngIf="name.errors.required">Name is required</div>
+              </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+              <label for="empId">Employee Id</label>
+              <input type="text" class="form-control" placeholder="Employee Id" name="empId" [(ngModel)]="companyInputs.empId" #empId="ngModel" [ngClass]="{ 'is-invalid': f.submitted && empId.invalid }" required />
+              <div *ngIf="f.submitted && empId.invalid" class="invalid-feedback">
+                  <div *ngIf="empId.errors.required">Id is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+                <label for="empPhone">Employee Phone Number</label>
+                <input type="text" class="form-control" placeholder="Employee Phone Number" name="empPhone" [(ngModel)]="companyInputs.empPhone" #empPhone="ngModel" [ngClass]="{ 'is-invalid': f.submitted && empPhone.invalid }" required />
+                <div *ngIf="f.submitted && empPhone.invalid" class="invalid-feedback">
+                    <div *ngIf="empPhone.errors.required">Phone Number is required</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+              <label for="designation">Employee Designation</label>
+              <input type="text" class="form-control" name="designation" placeholder="Employee Designation" [(ngModel)]="companyInputs.designation" #designation="ngModel" [ngClass]="{ 'is-invalid': f.submitted && designation.invalid }" required />
+              <div *ngIf="f.submitted && designation.invalid" class="invalid-feedback">
+                  <div *ngIf="designation.errors.required">Designation is required</div>
+              </div>
+          </div>
+      </div>
+        <div class="col-md-6">
+          <div class="form-group">
+              <label for="reportingOffice">Reporting Officer</label>
+              <input type="text" class="form-control" name="reportingOffice" placeholder="Reporting Office" [(ngModel)]="companyInputs.reportingOffice" #reportingOffice="ngModel" [ngClass]="{ 'is-invalid': f.submitted && reportingOffice.invalid }" required />
+              <div *ngIf="f.submitted && reportingOffice.invalid" class="invalid-feedback">
+                  <div *ngIf="reportingOffice.errors.required">Reporting Officer is required</div>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="form-group">
+              <label for="reportingOfficeEmail">Reporting Office Email</label>
+              <input type="text" class="form-control" name="reportingOfficeEmail" placeholder="Reporting Office Email" [(ngModel)]="companyInputs.reportingOfficeEmail" #reportingOfficeEmail="ngModel" [ngClass]="{ 'is-invalid': f.submitted && reportingOfficeEmail.invalid }" required email />
+              <div *ngIf="f.submitted && reportingOfficeEmail.invalid" class="invalid-feedback">
+                  <div *ngIf="reportingOfficeEmail.errors.required">Email is required</div>
+                  <div *ngIf="reportingOfficeEmail.errors.reportingOfficeEmail">Email must be a valid email address</div>
+              </div>
+          </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group">
+            <label for="reportingOfficePhone">Reporting Office Phone</label>
+            <input type="text" class="form-control" name="reportingOfficePhone" placeholder="Reporting Office Phone" [(ngModel)]="companyInputs.reportingOfficePhone" #reportingOfficePhone="ngModel" [ngClass]="{ 'is-invalid': f.submitted && reportingOfficePhone.invalid }" required />
+            <div *ngIf="f.submitted && reportingOfficePhone.invalid" class="invalid-feedback">
+                <div *ngIf="reportingOfficePhone.errors.required">Reporting Office Phone is required</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+          <label for="payrollCost">PayRoll Cycle</label>
+          <select class="form-control" name="payrollCost" [(ngModel)]="companyInputs.payrollCost"
+          [ngClass]="{'is-invalid':f.submitted && payrollCost.invalid}" #payrollCost="ngModel">
+              <option [ngValue]="undefined" selected>Select</option>
+              <option *ngFor="let payRoll of payRollCostList; let j = index" [value]="payRoll">{{payRoll}}</option>
+            </select>
+            <div class="invalid-feedback">
+              <div>PayRoll Cycle is required</div>
+          </div>
+      </div>
+  </div>
+    <div class="col-md-6">
+      <div class="form-group">
+          <label for="perDayCost">Per Day Cost</label>
+          <input type="text" class="form-control" name="perDayCost" placeholder="Per Day Cost" [(ngModel)]="companyInputs.perDayCost" #perDayCost="ngModel" [ngClass]="{ 'is-invalid': f.submitted && perDayCost.invalid }" required />
+          <div *ngIf="f.submitted && perDayCost.invalid" class="invalid-feedback">
+              <div *ngIf="perDayCost.errors.required">Per Day Cost is required</div>
+          </div>
+      </div>
+    </div>
+      <div class="col-md-6">
+        <div class="form-group">
+            <label for="leavesAllowedPerMonth">Leaves Allowed Per Month</label>
+            <input type="text" class="form-control" name="leavesAllowedPerMonth" placeholder="Leaves Allowed Per Month" [(ngModel)]="companyInputs.leavesAllowedPerMonth" #leavesAllowedPerMonth="ngModel" [ngClass]="{ 'is-invalid': f.submitted && leavesAllowedPerMonth.invalid }" required />
+            <div *ngIf="f.submitted && leavesAllowedPerMonth.invalid" class="invalid-feedback">
+                <div *ngIf="leavesAllowedPerMonth.errors.required">Leaves Allowed Per Month is required</div>
+            </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <ng-container *ngFor="let internals of internalsList; let index=index">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="assetType">Asset Type</label>
+                        <select class="form-control " name="assetType_{{index}}" [(ngModel)]="internals.assetType"
+                         #assetType_{{index}}="ngModel" required>
+                            <option [ngValue]="undefined" selected>Select</option>
+                            <option *ngFor="let academys of academyList; let j = index" [value]="academys">{{academys}}</option>
+                          </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="serialNo">Serial No</label>
+                        <input type="text" class="form-control" name="serialNo_{{index}}" placeholder="Serial No"
+                        [(ngModel)]="companyInputs.serialNo" #serialNo_{{index}}="ngModel"/>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                      <label for="comments">Comments</label>
+                      <input type="text" class="form-control" name="comments_{{index}}" placeholder="Comments"
+                      [(ngModel)]="companyInputs.comments" #comments_{{index}}="ngModel"/>
+                  </div>
+              </div>
+                <div class="col-md-2 plusminus-container">
+                    <i #addInternalElement *ngIf="index == internalsList.length-1" class="fa fa-plus plusMinus plusColor" data-toggle="tooltip" title="Create User" (click)="addOneMoreinternals()"></i>
+                    <i *ngIf="index >= 0 && internalsList.length-1" class="fa fa-minus plusMinus minusColor" data-toggle="tooltip" title="Remove User" (click)="removeinternals(index)"></i>
+                </div>
+            </div>
+
+        </ng-container>
+    </div>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+
+
+<ng-template #company>
+  <div class="employeePop">
+  <div class="modal-header">
+      <div class="col-md-12 row" style="display: flex; ">
+      <div class="">
+      <h6 class="popupHeader">{{employeeName}} Monthly Cost</h6>
+      </div>
+      </div>
+      <button type="button" class="close close-style" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+      <div class="col-md-12 row" style="display: flex !important;">
+          <p-table #tab2 class="" [columns]="employeeMonthlyCostHeaders" [value]="employeeMonthlyCostList" sortMode="multiple" [paginator]="true"
+          [rows]="pageRecordSizeOne" id="quoteTable" [rowsPerPageOptions]="pageOptionsOne" (onPage)="onPageOne($event)"
+          [style]="{'width': '100%'}" [(selection)]="selectedDataOne" [scrollable]="true">
+          <ng-template pTemplate="header" let-columns>
+              <tr>
+                  <th style="width: 3em">
+                      <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                  </th>
+                  <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                      {{col.header}}
+                      <p-sortIcon [field]="col.field"></p-sortIcon>
+                  </th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowDataOne let-columns="columns">
+              <tr [pSelectableRow]="rowDataOne">
+                  <td style="width: 3em">
+                      <p-tableCheckbox [value]="rowDataOne"></p-tableCheckbox>
+                  </td>
+                  <td *ngFor="let col of columns" [style.width]="col.width">
+                      <span>
+                          {{rowDataOne[col.field]}}
+                      </span>
+                  </td>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                  <td [attr.colspan]="5" style="text-align:center;">
+                      No Records Found.
+                  </td>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft">
+              <div style="display: flex;" *ngIf="employeeMonthlyCostList?.length > 0">
+                  <grid-pagination-info [totalRecords]="employeeMonthlyCostList.length" [pageData]="paginatoryDetailsOne">
+                  </grid-pagination-info>
+              </div>
+          </ng-template>
+      </p-table>
+    </div>
+  </div>
+  </div>
+</ng-template>

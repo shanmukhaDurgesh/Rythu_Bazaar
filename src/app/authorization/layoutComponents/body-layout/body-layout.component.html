@@ -1,0 +1,9 @@
+
+<app-header-layout [sidebar]="collapedSideBar"></app-header-layout>
+<app-left-nav-menu  (collapsedEvent)="receiveCollapsed($event)"></app-left-nav-menu>
+<div class="main-container" [ngStyle]="{'margin-left':  collapedSideBar  ? '55px' : '235px'}" >
+    <router-outlet></router-outlet>
+</div>
+<div class="footer-layout-cls">
+<app-footer-layout></app-footer-layout>
+</div>
